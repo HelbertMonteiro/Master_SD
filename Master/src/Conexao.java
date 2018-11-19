@@ -21,7 +21,7 @@ public class Conexao {
             @Override
             public void run() {
                 System.out.println("Master ON\n");
-                new CriarThread().run(9000, listaNodes);
+                new Gerencia().run(9000, listaNodes);
             }
         });
         
