@@ -23,7 +23,7 @@ public class Gerencia {
     
     private Scanner  scanner;
     private String   json, subTexto;
-    private int      index, codigoCliente, codigoNode;
+    private int      index, codigoCliente, codigoNode =0;
     private String[] palavras;
     
     private Gson                   gson;
@@ -48,6 +48,8 @@ public class Gerencia {
                 scanner = new Scanner(dispositivoCliente.getInputStream());
                 json    = scanner.nextLine();
                 
+                System.out.println(json);
+                
                 gson   = new Gson();
                 modelo = new Modelo();
                 modelo = gson.fromJson(json, Modelo.class);
@@ -66,7 +68,7 @@ public class Gerencia {
                         break;
                     case 2:
                         System.out.println("Fazendo Redução ...");
-                        reduzir(modelo, cliente, listaNodes, codigoNode);
+                        reduzir(modelo, cliente, listaNodes);
                         break;
                 }
                 
@@ -110,20 +112,20 @@ public class Gerencia {
             
             modelo = new Modelo(modelo.getCodigo(), modelo.getPalavras(), subTexto);
             
-            new Transmissor().enviar(modelo, listaNodes.get(i).getIp(), Integer.parseInt(listaNodes.get(i).getPorta()));
+            new Transmissor().enviar(modelo, listaNodes.get(i).getIp(), Integer.parseInt(listaNodes.get(i).getPorta()), false);
             
             subTexto = "";
         }
     }
     
-    private void reduzir(Modelo modelo, Node cliente, ArrayList<Node> listaNodes, int codigoNode){
+    private void reduzir(Modelo modelo, Node cliente, ArrayList<Node> listaNodes){
         for(int j = 0; j < modeloRetorno.getVezesPalavras().size(); j++){
             modeloRetorno.acrescentaValorVez(j, modelo.getValorVez(j));
         }
         codigoNode++;
         if(codigoNode == listaNodes.size()){
             modelo = new Modelo(modelo.getPalavras(), modeloRetorno.getVezesPalavras());
-            new Transmissor().enviar(modelo, cliente.getIp(), Integer.parseInt(cliente.getPorta()));
+            new Transmissor().enviar(modelo, cliente.getIp(), Integer.parseInt(cliente.getPorta()), true);
             codigoCliente = 0;
             codigoNode    = 0;
         }

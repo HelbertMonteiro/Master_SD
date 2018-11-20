@@ -13,14 +13,16 @@ import java.net.Socket;
 
 public class Transmissor {
     
-    private OutputStream osSaida;
-    private PrintWriter  pwSaida;
-    private Socket       dispositivoCliente;
-    private Gson         gson;
+    private OutputStream   osSaida;
+    private PrintWriter    pwSaida;
+    private Socket         dispositivoCliente;
+    private Gson           gson;
+    private GeradorGrafico geradorGrafico;
     
     private String       json;
     
-    public void enviar(Modelo modelo, String ip, int porta){
+    public void enviar(Modelo modelo, String ip, int porta, boolean teste){
+        geradorGrafico = new GeradorGrafico();
         try{
             gson = new Gson();
             json = gson.toJson(modelo);
@@ -39,6 +41,12 @@ public class Transmissor {
         }catch(IOException erro){
             System.out.println("Erro no envio da mensagem: " + erro.getMessage());
         }
+        /*if(teste){
+            for(int i = 0; i < modelo.getPalavras().size(); i++){
+                geradorGrafico.addValor(Double.parseDouble(modelo.getVezesPalavras().get(i)), modelo.getPalavras().get(i), modelo.getPalavras().get(i), i);
+            }
+            geradorGrafico.exibeGrafico();
+        }*/
     }
     
 }
